@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\persona_has_nota;
 use Illuminate\Http\Request;
-
+use DB;
 class PersonaHasNotaController extends Controller
 {
     /**
@@ -14,7 +14,8 @@ class PersonaHasNotaController extends Controller
      */
     public function index()
     {
-        //
+        $total = DB::SELECT("CALL `nota_total`();");
+        return $total;
     }
 
     /**
