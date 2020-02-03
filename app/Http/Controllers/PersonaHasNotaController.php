@@ -18,6 +18,11 @@ class PersonaHasNotaController extends Controller
         return $total;
     }
 
+    public function notaPersona(Request $request){
+        $notas = DB::SELECT("CALL nota_usuario(?)",[$request->idpersona]);
+        return $notas;
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -36,11 +41,28 @@ class PersonaHasNotaController extends Controller
      */
     public function store(Request $request)
     {
-        $nota = new PersonaHasNota();
-        $nota->persona_idpersona = $request->persona_idpersona;
-        $nota->nota_idnota = $request->nota_idnota;
+        $nota = new persona_has_nota();
+        $nota->persona_idpersona = $request->idpersona;
+        $nota->nota_idnota = $request->idnota;
         $nota->save();
     }
+
+    public function registrar(Request $request)
+    {
+        $nota = new persona_has_nota();
+        $nota->persona_idpersona = $request->idpersona;
+        $nota->nota_idnota = $request->idnota;
+        $nota->save();
+
+        $notas = DB::SELECT("CALL nota_usuario(?)",[$request->idpersona]);
+        $suma = 0;
+        foreach($notas as $dato){
+            $suma = $suma + $dato->total;
+        }
+        return $suma;
+    }
+
+
 
     /**
      * Display the specified resource.

@@ -9,4 +9,6 @@ Route::group(['middleware' => 'cors'],function(){
     Route::apiResource('persona_has_asistencia','PersonaHasAsistenciaController');
     Route::get('b_persona','PersonaController@b_persona');
     Route::get('registrar','PersonaHasAsistenciaController@registrar');
+    Route::get('registrarNota','PersonaHasNotaController@registrar');
+    Route::get('notaPersona','PersonaHasNotaController@notaPersona');
 });
