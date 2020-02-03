@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.1
+-- version 5.0.1
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 02-02-2020 a las 00:02:53
--- Versión del servidor: 10.4.8-MariaDB
--- Versión de PHP: 7.3.11
+-- Tiempo de generación: 03-02-2020 a las 18:44:25
+-- Versión del servidor: 10.4.11-MariaDB
+-- Versión de PHP: 7.4.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -29,6 +29,14 @@ DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getRegistro` (IN `id` INT, IN `fecha` DATE)  READS SQL DATA
     SQL SECURITY INVOKER
 SELECT * FROM `persona_has_asistencia` WHERE fecha_registro = fecha AND persona_idpersona = id GROUP BY asistencia_id$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `nota_total` ()  READS SQL DATA
+    SQL SECURITY INVOKER
+SELECT nota_idnota as id ,nota.nombre,COUNT(*) as total FROM persona_has_nota join nota on nota.idnota = nota_idnota GROUP BY nota_idnota$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `nota_usuario` (IN `idpersona` INT)  READS SQL DATA
+    SQL SECURITY INVOKER
+SELECT nota_idnota as id ,nota.nombre,COUNT(*) as total FROM persona_has_nota join nota on nota.idnota = nota_idnota WHERE persona_has_nota.persona_idpersona = idpersona GROUP BY nota_idnota$$
 
 DELIMITER ;
 
@@ -89,17 +97,19 @@ CREATE TABLE `persona` (
   `apellido` varchar(45) DEFAULT NULL,
   `email` varchar(45) DEFAULT NULL,
   `telefono` varchar(45) DEFAULT NULL,
-  `rol_idrol` int(11) NOT NULL
+  `rol_idrol` int(11) NOT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `persona`
 --
 
-INSERT INTO `persona` (`idpersona`, `cedula`, `nombre`, `apellido`, `email`, `telefono`, `rol_idrol`) VALUES
-(1, '1719223016', 'Darwin Fernando', 'Casame Gualotuña', 'fernandocasame7@gmail.com', '0995279067', 2),
-(2, '1719223017', 'Christian David', 'Anasi Gualotuña', 'crd@gmail.com', '0999999999', 1),
-(3, '1719223018', 'Fernando', 'Casame', 'cdarfgvn@gmail.com', '0999999999', 2);
+INSERT INTO `persona` (`idpersona`, `cedula`, `nombre`, `apellido`, `email`, `telefono`, `rol_idrol`, `updated_at`, `created_at`) VALUES
+(1, '1719223016', 'Darwin Fernando', 'Casame Gualotuña', 'fernandocasame7@gmail.com', '0995279067', 2, NULL, NULL),
+(2, '1719223017', 'Christian David', 'Anasi Gualotuña', 'crd@gmail.com', '0999999999', 1, NULL, NULL),
+(3, '1719223018', 'Fernando', 'Casame', 'cdarfgvn@gmail.com', '0999999999', 2, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -126,18 +136,9 @@ INSERT INTO `persona_has_asistencia` (`id`, `persona_idpersona`, `asistencia_id`
 (12, 1, 1, '2020-01-28', '08:48:01', '2020-01-28 13:48:01', '2020-01-28 13:48:01'),
 (13, 1, 4, '2020-01-28', '17:17:55', '2020-01-28 22:17:55', '2020-01-28 22:17:55'),
 (14, 1, 4, '2020-01-28', '17:17:57', '2020-01-28 22:17:57', '2020-01-28 22:17:57'),
-(15, 3, 1, '2020-01-28', '08:12:46', '2020-01-28 13:12:46', '2020-01-28 13:12:46'),
-(16, 3, 1, '2020-01-28', '08:13:42', '2020-01-28 13:13:42', '2020-01-28 13:13:42'),
-(17, 3, 3, '2020-01-28', '13:19:56', '2020-01-28 18:19:56', '2020-01-28 18:19:56'),
-(18, 3, 3, '2020-01-28', '13:21:41', '2020-01-28 18:21:41', '2020-01-28 18:21:41'),
-(19, 3, 3, '2020-01-29', '13:24:35', '2020-01-29 18:24:35', '2020-01-29 18:24:35'),
-(20, 1, 3, '2020-01-29', '13:34:51', '2020-01-29 18:34:51', '2020-01-29 18:34:51'),
-(21, 3, 2, '2020-01-29', '12:36:39', '2020-01-29 17:36:39', '2020-01-29 17:36:39'),
-(22, 3, 1, '2020-01-29', '08:36:58', '2020-01-29 13:36:58', '2020-01-29 13:36:58'),
-(23, 3, 4, '2020-01-29', '17:37:18', '2020-01-29 22:37:18', '2020-01-29 22:37:18'),
-(24, 3, 4, '2020-01-30', '17:38:36', '2020-01-30 22:38:36', '2020-01-30 22:38:36'),
-(25, 3, 4, '2020-01-31', '17:54:04', '2020-01-31 22:54:04', '2020-01-31 22:54:04'),
-(26, 3, 4, '2020-02-01', '17:59:07', '2020-02-01 22:59:07', '2020-02-01 22:59:07');
+(15, 1, 2, '2020-01-30', '12:07:13', '2020-01-30 17:07:13', '2020-01-30 17:07:13'),
+(16, 1, 1, '2020-02-02', '08:09:59', '2020-02-02 13:09:59', '2020-02-02 13:09:59'),
+(17, 1, 2, '2020-02-03', '12:40:15', '2020-02-03 17:40:15', '2020-02-03 17:40:15');
 
 -- --------------------------------------------------------
 
@@ -148,8 +149,51 @@ INSERT INTO `persona_has_asistencia` (`id`, `persona_idpersona`, `asistencia_id`
 CREATE TABLE `persona_has_nota` (
   `id` int(11) NOT NULL,
   `persona_idpersona` int(11) NOT NULL,
-  `nota_idnota` int(11) NOT NULL
+  `nota_idnota` int(11) NOT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `persona_has_nota`
+--
+
+INSERT INTO `persona_has_nota` (`id`, `persona_idpersona`, `nota_idnota`, `updated_at`, `created_at`) VALUES
+(1, 1, 2, NULL, NULL),
+(2, 1, 1, NULL, NULL),
+(3, 1, 2, NULL, NULL),
+(4, 2, 4, NULL, NULL),
+(8, 1, 2, NULL, NULL),
+(9, 3, 2, NULL, NULL),
+(10, 1, 3, NULL, NULL),
+(11, 3, 2, NULL, NULL),
+(12, 3, 2, NULL, NULL),
+(13, 2, 2, NULL, NULL),
+(14, 2, 1, NULL, NULL),
+(15, 1, 3, NULL, NULL),
+(16, 3, 2, NULL, NULL),
+(17, 3, 2, NULL, NULL),
+(18, 1, 1, '2020-02-02 16:19:16', '2020-02-02 16:19:16'),
+(19, 1, 1, '2020-02-03 00:02:39', '2020-02-03 00:02:39'),
+(20, 1, 1, '2020-02-03 00:09:18', '2020-02-03 00:09:18'),
+(21, 1, 1, '2020-02-03 00:24:01', '2020-02-03 00:24:01'),
+(22, 1, 1, '2020-02-03 00:25:31', '2020-02-03 00:25:31'),
+(23, 1, 1, '2020-02-03 00:28:14', '2020-02-03 00:28:14'),
+(24, 1, 1, '2020-02-03 00:29:37', '2020-02-03 00:29:37'),
+(25, 1, 2, '2020-02-03 00:29:54', '2020-02-03 00:29:54'),
+(26, 1, 1, '2020-02-03 00:30:09', '2020-02-03 00:30:09'),
+(27, 1, 4, '2020-02-03 00:30:36', '2020-02-03 00:30:36'),
+(28, 1, 3, '2020-02-03 00:30:41', '2020-02-03 00:30:41'),
+(29, 1, 2, '2020-02-03 00:30:41', '2020-02-03 00:30:41'),
+(30, 1, 1, '2020-02-03 00:30:42', '2020-02-03 00:30:42'),
+(31, 1, 1, '2020-02-03 00:48:28', '2020-02-03 00:48:28'),
+(32, 1, 1, '2020-02-03 00:48:50', '2020-02-03 00:48:50'),
+(33, 1, 1, '2020-02-03 00:49:02', '2020-02-03 00:49:02'),
+(34, 1, 1, '2020-02-03 00:50:00', '2020-02-03 00:50:00'),
+(35, 1, 2, '2020-02-03 00:55:29', '2020-02-03 00:55:29'),
+(36, 1, 1, '2020-02-03 01:00:15', '2020-02-03 01:00:15'),
+(37, 1, 2, '2020-02-03 01:03:05', '2020-02-03 01:03:05'),
+(38, 1, 1, '2020-02-03 14:28:21', '2020-02-03 14:28:21');
 
 -- --------------------------------------------------------
 
@@ -236,19 +280,19 @@ ALTER TABLE `nota`
 -- AUTO_INCREMENT de la tabla `persona`
 --
 ALTER TABLE `persona`
-  MODIFY `idpersona` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `idpersona` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT de la tabla `persona_has_asistencia`
 --
 ALTER TABLE `persona_has_asistencia`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT de la tabla `persona_has_nota`
 --
 ALTER TABLE `persona_has_nota`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT de la tabla `rol`
