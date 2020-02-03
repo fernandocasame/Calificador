@@ -14,7 +14,7 @@ class PersonaController extends Controller
      */
     public function index()
     {
-        $persona=DB::SELECT("SELECT * FROM persona");
+        $persona=DB::SELECT("SELECT * FROM persona ORDER BY idpersona DESC");
         return $persona;
     }
 
@@ -47,7 +47,26 @@ class PersonaController extends Controller
         $persona->apellido = $request->apellido;
         $persona->email = $request->email;
         $persona->telefono = $request->telefono;
+        $persona->rol_idrol=$request->rol_idrol;
         $persona->save();
+    }
+
+    public function setPersona(Request $request)
+    {
+        $persona = new Persona();
+        $persona->cedula = $request->cedula;
+        $persona->nombre = $request->nombre;
+        $persona->apellido = $request->apellido;
+        $persona->email = $request->email;
+        $persona->telefono = $request->telefono;
+        $persona->rol_idrol=$request->rol_idrol;
+        $persona->save();
+
+        return $persona;
+    }
+
+    public function deletePersona(Request $request){
+        DB::DELETE("DELETE FROM persona WHERE idpersona = ?",[$request->idpersona]);
     }
 
     /**
