@@ -27,7 +27,7 @@ class AuthController extends Controller
     }
     public function login(Request $request)
     {
-        $persona = DB::SELECT("`idpersona`, `cedula`, `nombre`, `apellido`, `email`, `password`, `telefono`, `rol_idrol`, `updated_at`, `created_at`, `empresa_idempresa` FROM `persona` WHERE email = ? AND password = ?", [$request->email, sha1(md5($request->password))]);
+        $persona = DB::SELECT("SELECT `idpersona`, `cedula`, `nombre`, `apellido`, `email`, `password`, `telefono`, `rol_idrol`, `updated_at`, `created_at`, `empresa_idempresa` FROM `persona` WHERE email = ? AND password = ?", [$request->email, sha1(md5($request->password))]);
         //$persona = DB::SELECT("SELECT * FROM persona WHERE email = ? AND password = ?", [$request->email, $request->password]);
         $input = $request->only('email', 'password');
         $jwt_token = null;
