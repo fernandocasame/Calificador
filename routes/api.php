@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Http\Request;
-Route::post('/login', 'AuthController@login');
 Route::group(['middleware' => 'cors'],function(){
+    Route::post('/login', 'AuthController@login');
     Route::apiResource('empresa','EmpresaController');
     Route::apiResource('persona','PersonaController');
     Route::apiResource('nota','NotaController');
